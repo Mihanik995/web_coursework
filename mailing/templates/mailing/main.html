@@ -1,0 +1,27 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<div class="container">
+    <ul class="list-group">
+        {% for object in user.mailings_set.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            #{{object.pk}}
+            {% if object.is_finished %}
+            <span class="badge text-bg-success rounded-pill">Finished</span>
+            {% elif object.is_launched %}
+            <span class="badge text-bg-primary rounded-pill">Working</span>
+            {% else %}
+            <span class="badge text-bg-danger rounded-pill">Stopped</span>
+            {% endif %}
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <a type="button" class="btn btn-outline-secondary">View</a>
+                <a type="button" class="btn btn-outline-secondary">Edit</a>
+                <a type="button" class="btn btn-outline-danger">Delete</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <br>
+    <a type="button" class="btn btn-primary" href="/mailing/new/">New mailing</a>
+</div>
+{% endblock %}

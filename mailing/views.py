@@ -107,3 +107,22 @@ def client_delete(request, pk):
     client_to_delete = Client.objects.get(pk=pk)
     client_to_delete.delete()
     return HttpResponseRedirect(reverse_lazy('mailing:mailing_list'))
+
+def mailing_stop(request, pk):
+    mailing_to_stop = Mailings.objects.get(pk=pk)
+    mailing_to_stop.is_launched = False
+    mailing_to_stop.save()
+    return HttpResponseRedirect(reverse_lazy('mailing:mailing_list'))
+
+def mailing_finish(request, pk):
+    mailing_to_finish = Mailings.objects.get(pk=pk)
+    mailing_to_finish.is_launched = False
+    mailing_to_finish.is_finished = True
+    mailing_to_finish.save()
+    return HttpResponseRedirect(reverse_lazy('mailing:mailing_list'))
+
+def mailing_launch(request, pk):
+    mailing_to_delete = Mailings.objects.get(pk=pk)
+    mailing_to_delete.is_launched = True
+    mailing_to_delete.save()
+    return HttpResponseRedirect(reverse_lazy('mailing:mailing_list'))

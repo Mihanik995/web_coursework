@@ -22,6 +22,15 @@
                            href="{% url 'mailing:mailing_detail' object.pk %}">View</a>
                         <a type="button" class="btn btn-outline-secondary"
                            href="{% url 'mailing:update_mailing' object.pk %}">Edit</a>
+                        {% if object.is_launched %}
+                        <a type="button" class="btn btn-outline-secondary"
+                           href="{% url 'mailing:finish_mailing' object.pk %}">Finish</a>
+                        <a type="button" class="btn btn-outline-secondary"
+                           href="{% url 'mailing:stop_mailing' object.pk %}">Stop</a>
+                        {% elif not object.is_finished %}
+                        <a type="button" class="btn btn-outline-secondary"
+                           href="{% url 'mailing:launch_mailing' object.pk %}">Launch</a>
+                        {% endif %}
                         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                                 data-bs-target="#mailingModal">
                             Delete

@@ -12,7 +12,7 @@ class Client(models.Model):
     surname = models.CharField(verbose_name=_('surname'), max_length=50, **NULLABLE)
     notes = models.TextField(verbose_name=_('notes'), **NULLABLE)
 
-    owner = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(to=User, on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f'{self.name} {self.surname}'
@@ -26,7 +26,7 @@ class MailingMessage(models.Model):
     theme = models.CharField(verbose_name=_('message theme'), max_length=100)
     body = models.TextField(verbose_name=_('message text'))
 
-    owner = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(to=User, on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f'{self.theme}'

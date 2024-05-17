@@ -6,35 +6,16 @@
 <div class="container text-center">
     <div class="col-12">
         <div class="row">
-            <div class="col-4">
+            <div class="col">
                 <figure class="text-start">
-                    <p class="h2">Mailing #{{object.pk}}</p>
-                    <p class="lead">Started at {{object.first_mailing}}</p>
-                    <p class="lead">Frequency: {{object.frequency}}</p>
-                    <h3>
-                        {% if object.is_finished %}
-                        <span class="badge text-bg-success rounded-pill">Finished</span>
-                        {% elif object.is_launched %}
-                        <span class="badge text-bg-primary rounded-pill">Working</span>
-                        {% else %}
-                        <span class="badge text-bg-danger rounded-pill">Stopped</span>
-                        {% endif %}
-                    </h3>
+                    <p class="h2">{{object.theme}}</p>
                     <br>
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-subtitle mb-2 text-body-secondary">Message:</h5>
-                            <h3 class="card-title">{{object.mailing_message.theme}}</h3>
-                            <p class="card-text">{{object.mailing_message.body}}</p>
+                            <p class="card-text">{{object.body}}</p>
                         </div>
                     </div>
-                    <br>
-                    <h4>Mailing clients list:</h4>
-                    <ul class="list-group list-group-flush">
-                        {% for client in object.mailing_clients.all %}
-                        <li class="list-group-item">{{client}}</li>
-                        {% endfor %}
-                    </ul>
                 </figure>
             </div>
             <div class="col">

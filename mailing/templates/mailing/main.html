@@ -2,50 +2,172 @@
 
 {% block content %}
 <div class="container">
-    <ul class="list-group">
-        {% for object in user.mailings_set.all %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            #{{object.pk}}
-            {% if object.is_finished %}
-            <span class="badge text-bg-success rounded-pill">Finished</span>
-            {% elif object.is_launched %}
-            <span class="badge text-bg-primary rounded-pill">Working</span>
-            {% else %}
-            <span class="badge text-bg-danger rounded-pill">Stopped</span>
-            {% endif %}
-            <div class="btn-group" role="group" aria-label="Basic outlined example">
-                <a type="button" class="btn btn-outline-secondary" href="{% url 'mailing:mailing_detail' object.pk %}">View</a>
-                <a type="button" class="btn btn-outline-secondary" href="{% url 'mailing:update_mailing' object.pk %}">Edit</a>
-                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">
-                    Delete
-                </button>
-            </div>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Mailing delete</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Are you sure you want to delete mailing #{{object.pk}}?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
-                                </button>
-                                <a type="button" href="/mailing/{{object.pk}}/delete/" class="btn btn-danger">Delete
-                                    mailing</a>
+    <div class="row">
+        <div class="col-6">
+            <h3>Your mailings:</h3>
+            <ul class="list-group">
+                {% if user.mailings_set.all %}
+                {% for object in user.mailings_set.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    #{{object.pk}} - {{object.mailing_message.theme}}
+                    {% if object.is_finished %}
+                    <span class="badge text-bg-success rounded-pill">Finished</span>
+                    {% elif object.is_launched %}
+                    <span class="badge text-bg-primary rounded-pill">Working</span>
+                    {% else %}
+                    <span class="badge text-bg-danger rounded-pill">Stopped</span>
+                    {% endif %}
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <a type="button" class="btn btn-outline-secondary"
+                           href="{% url 'mailing:mailing_detail' object.pk %}">View</a>
+                        <a type="button" class="btn btn-outline-secondary"
+                           href="{% url 'mailing:update_mailing' object.pk %}">Edit</a>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#mailingModal">
+                            Delete
+                        </button>
+                    </div>
+                    <div class="modal fade" id="mailingModal" tabindex="-1" aria-labelledby="mailingModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="mailingModalLabel">Mailing delete</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete mailing #{{object.pk}}?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                    </button>
+                                    <a type="button" href="{% url 'mailing:delete_mailing' object.pk %}"
+                                       class="btn btn-danger">Delete
+                                        mailing</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-        </li>
-        {% endfor %}
-    </ul>
-    <br>
-    <a type="button" class="btn btn-primary" href="{% url 'mailing:add_mailing' %}">New mailing</a>
+                </li>
+                {% endfor %}
+                {% else %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <p class="lead">You don't have any mailings right now.</p>
+                </li>
+                {% endif %}
+            </ul>
+            <br>
+            <a type="button" class="btn btn-primary" href="{% url 'mailing:add_mailing' %}">New mailing</a>
+        </div>
+        <div class="col-6">
+            <h3>Your clients:</h3>
+            <ul class="list-group">
+                {% if user.client_set.all %}
+                {% for object in user.client_set.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{object}}
+                    {% if object.mailings_set.all %}
+                    <span class="badge text-bg-primary rounded-pill">{{object.mailings_set.count}} mailing(s)</span>
+                    {% else %}
+                    <span class="badge text-bg-danger rounded-pill">Doesn't have a mailing</span>
+                    {% endif %}
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <a type="button" class="btn btn-outline-secondary"
+                           href="{% url 'mailing:client_detail' object.pk %}">View</a>
+                        <a type="button" class="btn btn-outline-secondary"
+                           href="{% url 'mailing:update_client' object.pk %}">Edit</a>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#clientModal">
+                            Delete
+                        </button>
+                    </div>
+                    <div class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="clientModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="clientModalLabel">Mailing delete</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete client {{object}}? All the mailings associated with this client will also be deleted!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                    </button>
+                                    <a type="button" href="{% url 'mailing:delete_client' object.pk %}" class="btn btn-danger">Delete
+                                        mailing</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+                {% else %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <p class="lead">You don't have any clients right now.</p>
+                </li>
+                {% endif %}
+            </ul>
+            <br>
+            <a type="button" class="btn btn-primary" href="{% url 'mailing:add_client' %}">New client</a>
+            <br>
+            <br>
+            <h3>Your messages:</h3>
+            <ul class="list-group">
+                {% if user.mailingmessage_set.all %}
+                {% for object in user.mailingmessage_set.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{object}}
+                    {% if object.mailings_set.all %}
+                    <span class="badge text-bg-primary rounded-pill">Has a mailing</span>
+                    {% else %}
+                    <span class="badge text-bg-danger rounded-pill">Doesn't have a mailing</span>
+                    {% endif %}
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <a type="button" class="btn btn-outline-secondary"
+                           href="{% url 'mailing:message_detail' object.pk %}">View</a>
+                        <a type="button" class="btn btn-outline-secondary"
+                           href="{% url 'mailing:update_message' object.pk %}">Edit</a>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#messageModal">
+                            Delete
+                        </button>
+                    </div>
+                    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="messageModalLabel">Mailing delete</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete message "{{object}}"? All the mailings associated with this message will also be deleted!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                    </button>
+                                    <a type="button" href="{% url 'mailing:delete_message' object.pk %}" class="btn btn-danger">Delete
+                                        mailing</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+                {% else %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <p class="lead">You don't have any messages right now.</p>
+                </li>
+                {% endif %}
+            </ul>
+            <br>
+            <a type="button" class="btn btn-primary" href="{% url 'mailing:add_message' %}">New message</a>
+        </div>
+    </div>
 </div>
 {% endblock %}

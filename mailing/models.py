@@ -14,6 +14,9 @@ class Client(models.Model):
 
     owner = models.ForeignKey(to=User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.name} {self.surname}'
+
     class Meta:
         verbose_name = 'client'
         verbose_name_plural = 'clients'
@@ -25,6 +28,9 @@ class MailingMessage(models.Model):
 
     owner = models.ForeignKey(to=User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.theme}'
+
     class Meta:
         verbose_name = 'message'
         verbose_name_plural = 'messages'
@@ -32,7 +38,7 @@ class MailingMessage(models.Model):
 
 class Mailings(models.Model):
     first_mailing = models.DateTimeField(verbose_name=_('first mailing time and date'))
-    frequency = models.DateTimeField(verbose_name=_('frequency'))
+    frequency = models.DurationField(verbose_name=_('frequency'))
     is_launched = models.BooleanField(verbose_name='is_launched', default=True)
     is_finished = models.BooleanField(verbose_name='is_finished', default=False)
 
@@ -40,7 +46,7 @@ class Mailings(models.Model):
                                         verbose_name=_('mailing message'))
     mailing_clients = models.ManyToManyField(to=Client, verbose_name=_('mailing clients list'))
 
-    owner = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(to=User, on_delete=models.CASCADE, **NULLABLE)
 
     class Meta:
         verbose_name = 'mailing'

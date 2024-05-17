@@ -14,14 +14,38 @@
             <span class="badge text-bg-danger rounded-pill">Stopped</span>
             {% endif %}
             <div class="btn-group" role="group" aria-label="Basic outlined example">
-                <a type="button" class="btn btn-outline-secondary">View</a>
-                <a type="button" class="btn btn-outline-secondary">Edit</a>
-                <a type="button" class="btn btn-outline-danger">Delete</a>
+                <a type="button" class="btn btn-outline-secondary" href="{% url 'mailing:mailing_detail' object.pk %}">View</a>
+                <a type="button" class="btn btn-outline-secondary" href="{% url 'mailing:update_mailing' object.pk %}">Edit</a>
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                    Delete
+                </button>
             </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Mailing delete</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete mailing #{{object.pk}}?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                </button>
+                                <a type="button" href="/mailing/{{object.pk}}/delete/" class="btn btn-danger">Delete
+                                    mailing</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </li>
         {% endfor %}
     </ul>
     <br>
-    <a type="button" class="btn btn-primary" href="/mailing/new/">New mailing</a>
+    <a type="button" class="btn btn-primary" href="{% url 'mailing:add_mailing' %}">New mailing</a>
 </div>
 {% endblock %}

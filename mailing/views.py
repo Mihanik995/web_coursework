@@ -1,3 +1,5 @@
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -6,6 +8,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from mailing.forms import MailingForm, MailingMessageForm, ClientForm
 from mailing.models import Mailings, MailingMessage, Client
 
+scheduler = BackgroundScheduler()
 
 class MailingListView(LoginRequiredMixin, ListView):
     model = Mailings
@@ -37,6 +40,7 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         if form.is_valid():
             new_mailing = form.save()
             new_mailing.owner = self.request.user
+            new_mailing.next_mailing_date = new_mailing.first_mailing
             new_mailing.save()
 
         return super().form_valid(form)

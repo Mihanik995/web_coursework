@@ -9,8 +9,12 @@
             <div class="col-4">
                 <figure class="text-start">
                     <p class="h2">Mailing #{{object.pk}}</p>
+                    {% if object.first_mailing == object.next_mailing_date %}
+                    <p class="lead">Starts at {{object.first_mailing}}</p>
+                    {% else %}
                     <p class="lead">Started at {{object.first_mailing}}</p>
-                    <p class="lead">Frequency: {{object.frequency}}</p>
+                    <p class="lead">Next mailing: {{object.next_mailing_date}}</p>
+                    {% endif %}
                     <h3>
                         {% if object.is_finished %}
                         <span class="badge text-bg-success rounded-pill">Finished</span>

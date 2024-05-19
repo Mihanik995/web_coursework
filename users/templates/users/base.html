@@ -23,6 +23,7 @@
         <ul class="nav nav-pills">
             <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Home</a></li>
             {% if user.is_authenticated %}
+            <li class="nav-item"><a href="{% url 'mailing:mailing_list' %}" class="nav-link">Personal cabinet</a></li>
             <li class="nav-item">
                 <form method="post" action="/logout/">
                     {% csrf_token %}

@@ -1,3 +1,5 @@
+from datetime import datetime, timezone, timedelta
+
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,6 +11,7 @@ from mailing.forms import MailingForm, MailingMessageForm, ClientForm
 from mailing.models import Mailings, MailingMessage, Client
 
 scheduler = BackgroundScheduler()
+
 
 class MailingListView(LoginRequiredMixin, ListView):
     model = Mailings
@@ -40,8 +43,11 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         if form.is_valid():
             new_mailing = form.save()
             new_mailing.owner = self.request.user
-            if new_mailing.next_mailing_date < new_mailing.first_mailing:
+            if datetime.now(timezone.utc) + timedelta(hours=3) < new_mailing.first_mailing:
                 new_mailing.next_mailing_date = new_mailing.first_mailing
+            else:
+                new_mailing.next_mailing_date = (datetime.now()
+                                                 .replace(second=0, microsecond=0, tzinfo=timezone.utc))
             new_mailing.save()
 
         return super().form_valid(form)
@@ -83,15 +89,6 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
     form_class = MailingForm
     success_url = reverse_lazy('mailing:mailing_list')
 
-    def form_valid(self, form):
-        if form.is_valid():
-            new_mailing = form.save()
-            if new_mailing.next_mailing_date < new_mailing.first_mailing:
-                new_mailing.next_mailing_date = new_mailing.first_mailing
-                new_mailing.save()
-
-        return super().form_valid(form)
-
 
 class MailingMessageUpdateView(LoginRequiredMixin, UpdateView):
     model = MailingMessage
@@ -112,15 +109,18 @@ def mailing_delete(request, pk):
     mailing_to_delete.delete()
     return HttpResponseRedirect(reverse_lazy('mailing:mailing_list'))
 
+
 def mailing_message_delete(request, pk):
     mailing_message_to_delete = MailingMessage.objects.get(pk=pk)
     mailing_message_to_delete.delete()
     return HttpResponseRedirect(reverse_lazy('mailing:mailing_list'))
 
+
 def client_delete(request, pk):
     client_to_delete = Client.objects.get(pk=pk)
     client_to_delete.delete()
     return HttpResponseRedirect(reverse_lazy('mailing:mailing_list'))
+
 
 def mailing_stop(request, pk):
     mailing_to_stop = Mailings.objects.get(pk=pk)
@@ -128,12 +128,14 @@ def mailing_stop(request, pk):
     mailing_to_stop.save()
     return HttpResponseRedirect(reverse_lazy('mailing:mailing_list'))
 
+
 def mailing_finish(request, pk):
     mailing_to_finish = Mailings.objects.get(pk=pk)
     mailing_to_finish.is_launched = False
     mailing_to_finish.is_finished = True
     mailing_to_finish.save()
     return HttpResponseRedirect(reverse_lazy('mailing:mailing_list'))
+
 
 def mailing_launch(request, pk):
     mailing_to_delete = Mailings.objects.get(pk=pk)

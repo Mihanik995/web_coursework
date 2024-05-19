@@ -1,0 +1,33 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-md">
+            <div class="row">
+                <div class="col-lg-7 pt-4 pt-lg-0">
+                    <h3>{{object.title}}</h3>
+                    <br>
+                    <p>Published at {{object.publication_date}}</p>
+                    <br>
+                    <p>{{object.body}}</p>
+                    <br>
+                    <p>Views: {{object.views}}</p>
+                </div>
+
+                <div style="text-align: left;" class="col-lg-5">
+                    <img src="{{object.image.url}}" class="img-thumbnail imgshadow" alt="">
+                </div>
+
+                {% if user.is_superuser %}
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'blog:edit_post' object.pk %}" type="button" class="btn btn-outline-secondary">Edit</a>
+                    <a href="{% url 'blog:edit_post' object.pk %}" type="button" class="btn btn-outline-danger">Delete</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

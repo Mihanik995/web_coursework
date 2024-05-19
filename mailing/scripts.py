@@ -1,12 +1,11 @@
 from datetime import datetime, timezone
+from smtplib import SMTPException
 
-import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.mail import EmailMessage
 from django_apscheduler.jobstores import DjangoJobStore
 
-from config import settings
-from mailing.models import Mailings
+from mailing.models import Mailings, MailingAttempt
 
 
 def start():
@@ -26,7 +25,22 @@ def send_mailing():
                              body=mailing.mailing_message.body,
                              to=[client.email for client in mailing.mailing_clients.all()]
                              )
-        email.send()
+        try:
+            email.send()
+            MailingAttempt.objects.create(
+                mailing=mailing,
+                datetime=current_datetime,
+                is_successful=True
+            )
+        except SMTPException as e:
+            MailingAttempt.objects.create(
+                mailing=mailing,
+                datetime=current_datetime,
+                is_successful=False,
+                mail_server_response=e
+            )
+
+
 
         mailing.next_mailing_date += mailing.frequency
         mailing.save()

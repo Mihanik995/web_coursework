@@ -56,6 +56,6 @@ class Mailings(models.Model):
 class MailingAttempt(models.Model):
     datetime = models.DateTimeField(verbose_name=_('mailing attempt date and time'))
     is_successful = models.BooleanField(verbose_name=_('status'))
-    mail_server_response = models.TextField(verbose_name=_('mail server response'))
+    mail_server_response = models.TextField(verbose_name=_('mail server response'), **NULLABLE)
 
     mailing = models.ForeignKey(to=Mailings, on_delete=models.CASCADE)

@@ -6,7 +6,7 @@
 <div class="container text-center">
     <div class="col-12">
         <div class="row">
-            <div class="col-4">
+            <div class="col-6">
                 <figure class="text-start">
                     <p class="h2">Mailing #{{object.pk}}</p>
                     {% if object.first_mailing == object.next_mailing_date %}
@@ -42,8 +42,10 @@
                 </figure>
             </div>
             <div class="col">
+                <p class="h2">Mailing attempts</p>
+                <br>
                 <ul class="list-group">
-                    {% for attempt in object.mailing_attempt_set.all %}
+                    {% for attempt in object.mailingattempt_set.all %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{attempt.datetime}}
                         {% if attempt.is_successful %}

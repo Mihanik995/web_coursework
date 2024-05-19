@@ -40,7 +40,8 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         if form.is_valid():
             new_mailing = form.save()
             new_mailing.owner = self.request.user
-            new_mailing.next_mailing_date = new_mailing.first_mailing
+            if new_mailing.next_mailing_date < new_mailing.first_mailing:
+                new_mailing.next_mailing_date = new_mailing.first_mailing
             new_mailing.save()
 
         return super().form_valid(form)
@@ -81,6 +82,15 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'mailing/add_mailing.html'
     form_class = MailingForm
     success_url = reverse_lazy('mailing:mailing_list')
+
+    def form_valid(self, form):
+        if form.is_valid():
+            new_mailing = form.save()
+            if new_mailing.next_mailing_date < new_mailing.first_mailing:
+                new_mailing.next_mailing_date = new_mailing.first_mailing
+                new_mailing.save()
+
+        return super().form_valid(form)
 
 
 class MailingMessageUpdateView(LoginRequiredMixin, UpdateView):

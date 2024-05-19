@@ -38,7 +38,7 @@ class MailingMessage(models.Model):
 
 class Mailings(models.Model):
     first_mailing = models.DateTimeField(verbose_name=_('first mailing time and date'))
-    next_mailing_date = models.DateTimeField(_('next mailing date'), **NULLABLE)
+    next_mailing_date = models.DateTimeField(_('next mailing date'), auto_now_add=True)
     frequency = models.DurationField(verbose_name=_('frequency'))
     is_launched = models.BooleanField(verbose_name='is_launched', default=True)
     is_finished = models.BooleanField(verbose_name='is_finished', default=False)

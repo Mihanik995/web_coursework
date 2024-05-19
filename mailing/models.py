@@ -52,6 +52,12 @@ class Mailings(models.Model):
     class Meta:
         verbose_name = 'mailing'
         verbose_name_plural = 'mailings'
+        permissions = [
+            (
+                'disable',
+                'Can disable mailings'
+            )
+        ]
 
 class MailingAttempt(models.Model):
     datetime = models.DateTimeField(verbose_name=_('mailing attempt date and time'))
